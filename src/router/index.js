@@ -13,7 +13,8 @@ const routes = [
     redirect: '/welcome',
     children: [
       { path: '/welcome', name: 'welcome', component: () => import('@/views/welcome') },
-      { path: '/article', name: 'article', component: () => import('@/views/article') }
+      { path: '/article', name: 'article', component: () => import('@/views/article') },
+      { path: '/articleadd', name: 'articleadd', component: () => import('@/views/articleadd/articleadd.vue') }
     ]
   }
 ]
