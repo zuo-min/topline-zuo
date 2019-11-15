@@ -68,7 +68,8 @@
           <el-table-column prop="pubdate" label="发布时间"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="stData">
-              <el-button type="primary" size="mini">修改</el-button>
+              <!-- 把要修改的文章的id传给修改文章的路由aid -->
+              <el-button type="primary" size="mini" @click="$router.push(`/articleedit/${stData.row.id}`)">修改</el-button>
               <el-button type="danger" size="mini" @click="del(stData.row.id)">删除</el-button>
             </template>
           </el-table-column>

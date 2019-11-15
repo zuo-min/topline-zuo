@@ -14,7 +14,9 @@ const routes = [
     children: [
       { path: '/welcome', name: 'welcome', component: () => import('@/views/welcome') },
       { path: '/article', name: 'article', component: () => import('@/views/article') },
-      { path: '/articleadd', name: 'articleadd', component: () => import('@/views/articleadd/articleadd.vue') }
+      { path: '/articleadd', name: 'articleadd', component: () => import('@/views/articleadd/articleadd.vue') },
+      // 添加修改文章的aid参数  路由传参 形参
+      { path: '/articleedit/:aid', name: 'articleedit', component: () => import('@/views/articleedit/articleedit.vue') }
     ]
   }
 ]
