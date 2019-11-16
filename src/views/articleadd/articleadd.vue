@@ -21,14 +21,15 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="频道 :" prop="channel_id">
-            <el-select v-model="addForm.channel_id" placeholder="请选择" clearable>
+            <!-- <el-select v-model="addForm.channel_id" placeholder="请选择" clearable>
               <el-option
                 v-for="item in channelList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
               ></el-option>
-            </el-select>
+            </el-select> -->
+            <channel-com @slt="selectHandler" :cid="addForm.id"></channel-com>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="addarticle()">发布</el-button>
@@ -45,14 +46,16 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
+import ChannelCom from '@/components/channel.vue'
 export default {
   name: 'ArticleAdd',
   components: {
-    quillEditor
+    quillEditor,
+    ChannelCom
   },
   data () {
     return {
-      channelList: [],
+      // channelList: [],
       addForm: {
         title: '',
         content: '',
@@ -77,22 +80,25 @@ export default {
       }
     }
   },
-  created () {
-    this.getChannelList()
-  },
+  // created () {
+  //   this.getChannelList()
+  // },
   methods: {
-    getChannelList () {
-      var pro = this.$http.get('/channels')
-      pro
-        .then(res => {
-          if (res.data.message === 'OK') {
-            this.channelList = res.data.data.channels
-          }
-        })
-        .catch(err => {
-          return this.$message.err('获取文章频道出错' + err)
-        })
+    selectHandler (val) {
+      this.addForm.channel_id = val
     },
+    // getChannelList () {
+    //   var pro = this.$http.get('/channels')
+    //   pro
+    //     .then(res => {
+    //       if (res.data.message === 'OK') {
+    //         this.channelList = res.data.data.channels
+    //       }
+    //     })
+    //     .catch(err => {
+    //       return this.$message.err('获取文章频道出错' + err)
+    //     })
+    // },
     // flag = true 发布草稿
     // flag = false 正式发布
     addarticle (flag) {

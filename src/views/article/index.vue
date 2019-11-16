@@ -16,14 +16,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="频道列表 :">
-            <el-select v-model="searchForm.channel_id" placeholder="请选择" clearable>
-              <el-option
-                v-for="item in channelList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
+            <channel-com @slt="selectHandler" :cid="searchForm.id"></channel-com>
           </el-form-item>
           <el-form-item label="时间选择 :">
             <el-date-picker
@@ -91,6 +84,7 @@
 </template>
 
 <script>
+import ChannelCom from '@/components/channel.vue'
 export default {
   name: 'ArticleList',
   data () {
@@ -104,13 +98,14 @@ export default {
         page: 1,
         per_page: 10
       },
-      channelList: [],
       articleList: [],
       tot: 0
     }
   },
+  components: {
+    ChannelCom
+  },
   created () {
-    this.getChannelList()
     this.getArticleList()
   },
   watch: {
@@ -131,6 +126,9 @@ export default {
     }
   },
   methods: {
+    selectHandler (val) {
+      this.searchForm.channel_id = val
+    },
     del (id) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -157,19 +155,6 @@ export default {
     handleCurrentChange (val) {
       this.searchForm.page = val
       // this.getArticleList()
-    },
-    getChannelList () {
-      var pro = this.$http.get('/channels')
-      pro
-        .then(res => {
-          if (res.data.message === 'OK') {
-            this.channelList = res.data.data.channels
-            // console.log(res)
-          }
-        })
-        .catch(err => {
-          return this.$message.err('获取文章频道出错' + err)
-        })
     },
     getArticleList () {
       let searchData = {}

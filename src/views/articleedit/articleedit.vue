@@ -10,7 +10,7 @@
             <el-input v-model="editForm.title"></el-input>
           </el-form-item>
           <el-form-item label="内容 :" prop="content">
-              <quillEditor v-model="editForm.content"></quillEditor>
+            <quillEditor v-model="editForm.content"></quillEditor>
           </el-form-item>
           <el-form-item label="封面 :">
             <el-radio-group v-model="editForm.cover.type">
@@ -21,14 +21,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="频道 :" prop="channel_id">
-            <el-select v-model="editForm.channel_id" placeholder="请选择" clearable>
-              <el-option
-                v-for="item in channelList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
+            <channel-com @slt="selectHandler" :cid="editForm.channel_id"></channel-com>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="editarticle()">修改</el-button>
@@ -45,14 +38,15 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
+import ChannelCom from '@/components/channel.vue'
 export default {
   name: 'ArticleAdd',
   components: {
-    quillEditor
+    quillEditor,
+    ChannelCom
   },
   data () {
     return {
-      channelList: [],
       editForm: {
         title: '',
         content: '',
@@ -78,7 +72,6 @@ export default {
     }
   },
   created () {
-    this.getChannelList()
     this.getArticleByAid()
   },
   computed: {
@@ -87,6 +80,10 @@ export default {
     }
   },
   methods: {
+    selectHandler (val) {
+      // 把子组件传递过来的频道信息赋予给channel_id
+      this.editForm.channel_id = val
+    },
     getArticleByAid () {
       let pro = this.$http.get(`/articles/${this.aid}`)
       pro
@@ -99,23 +96,12 @@ export default {
           return this.$message.error('获得文章失败!' + err)
         })
     },
-    getChannelList () {
-      var pro = this.$http.get('/channels')
-      pro
-        .then(res => {
-          if (res.data.message === 'OK') {
-            this.channelList = res.data.data.channels
-          }
-        })
-        .catch(err => {
-          return this.$message.err('获取文章频道出错' + err)
-        })
-    },
-
     editarticle (flag) {
-      this.$refs.editFormRef.validate((valid) => {
+      this.$refs.editFormRef.validate(valid => {
         if (valid) {
-          var pro = this.$http.put(`/articles/${this.aid}`, this.editForm, { params: { draft: flag } })
+          var pro = this.$http.put(`/articles/${this.aid}`, this.editForm, {
+            params: { draft: flag }
+          })
           pro
             .then(res => {
               this.$message.success('文章修改成功')
@@ -129,11 +115,9 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="less" scoped>
-
 .quill-editor /deep/ .ql-container {
   height: 200px;
 }
